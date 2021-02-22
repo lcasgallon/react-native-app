@@ -11,13 +11,14 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.9",
-    "@react-native-picker/picker": "^1.9.11",
+    "@react-native-community/picker": "^1.8.1",
     "@react-navigation/native": "^5.1.6",
     "@react-navigation/stack": "^5.2.11",
     "expo": "38.0.8",
     "expo-cli": "^4.1.6",
+    "expo-font": "~8.2.1",
     "firebase": "^7.14.1",
-    "native-base": "^2.15.2",
+    "formik": "^2.2.6",
     "react": "17.0.1",
     "react-native": "0.63",
     "react-native-datepicker": "^1.7.2",
@@ -26,7 +27,8 @@
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "^2.5.0",
-    "react-native-vector-icons": "^7.1.0"
+    "react-native-vector-icons": "^7.1.0",
+    "react-navigation": "^4.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

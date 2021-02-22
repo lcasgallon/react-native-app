@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import { View, Alert } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import DatePicker from 'react-native-datepicker';
-import {
-  Button,
+import { View, Alert, CheckBox, Button,
   Header,
   Container,
   Text,
@@ -12,58 +8,132 @@ import {
   Input,
   Item,
   Content,
-  Icon,
-} from 'native-base';
+  Card,
+  CardItem } from 'react-native';
+import DatePicker from 'react-native-datepicker';
+import { Ionicons } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+
 
 import { db } from '../../config/firebase';
+import { useEffect } from 'react';
 
 let addItem = (item) => {
   db.ref('/items').push({
-    name: item.name,
-    dataLicenca: item.dataLicenca,
+    fantasia: item.fantasia,
+    cpfcnpj: item.cpfcnpj,
+    razao: item.razao,
+    diaVencimento: item.diaVencimento,
+    dataPagamento: item.dataPagamento,
+    dataConexao: item.dataConexao,
     situacao: item.situacao,
   });
 };
 
-export default function AddItem() {
-  const [name, setName] = useState('');
-  const [dataLicenca, setDataLicenca] = useState('');
-  const [situacao, setSituacao] = useState('ativo');
+let updateItem = (item) => {
+  console.log(item);
+  db.ref('/items/' + item.key).update({
+    fantasia: item.fantasia,
+    cpfcnpj: item.cpfcnpj,
+    razao: item.razao,
+    diaVencimento: item.diaVencimento,
+    dataPagamento: item.dataPagamento,
+    dataConexao: item.dataConexao,
+    situacao: item.situacao,
+  });
+};
+
+export default function AddItem({ navigation, route }) {
+  const [fantasia, setFantasia] = useState('');
+  const [cpfcnpj, setCpfcnpj] = useState('');
+  const [razao, setRazao] = useState('');
+  const [diaVencimento, setDiaVencimento] = useState('');
+  const [dataPagamento, setDataPagamento] = useState('');
+  const [dataConexao, setDataConexao] = useState('');
+  const [situacao, setSituacao] = useState(true);
+  const [key, setKey] = useState('');
 
   function handleSubmit() {
-    let item = { name: name, dataLicenca: dataLicenca, situacao: situacao };
-    if (item.name && item.dataLicenca && item.situacao) {
-      addItem(item);
-      Alert.alert('Registro salvo com sucesso');
+    let item = {
+      key: key,
+      fantasia: fantasia,
+      cpfcnpj: cpfcnpj,
+      razao: razao,
+      diaVencimento: diaVencimento,
+      dataPagamento: dataPagamento,
+      dataConexao: dataConexao,
+      situacao: situacao,
+    };
+    if (item.dataPagamento && item.cpfcnpj) {
+      if (item.key) {
+        updateItem(item);
+        Alert.alert('Registro atualizado com sucesso');
+      } else {
+        addItem(item);
+        Alert.alert('Registro salvo com sucesso');
+      }
     } else {
       Alert.alert('Por favor preencha todos os campos');
     }
   }
 
+  useEffect(() => {
+    if (route.params.item) {
+      let item = route.params.item;
+      setFantasia(item.fantasia);
+      setCpfcnpj(item.cpfcnpj);
+      setRazao(item.razao);
+      setDiaVencimento(item.diaVencimento);
+      setDataConexao(item.dataConexao);
+      setDataPagamento(item.dataPagamento);
+      setSituacao(item.situacao);
+      setKey(item.key);
+    }
+  }, []);
+
   return (
     <Container>
-      <Header />
+      <Header>
+        <Text>{key ? <Label>ID Firebase -{key ? key : ''}</Label> : null}</Text>
+        </Header>
       <Content>
+      <Card>
+            <CardItem>
         <Form>
-          <Item floatingLabel>
-            <Label>Nome</Label>
-            <Input onChangeText={(text) => setName(text)} />
+          <Item stackedLabel>
+            <Label>Fantasia</Label>
+            <Input
+              value={fantasia}
+              onChangeText={(text) => setFantasia(text)}
+            />
+            </Item>
+            <Item stackedLabel>
+            <Label>Razão Social</Label>
+            <Input value={razao} onChangeText={(text) => setRazao(text)} />
           </Item>
-          <Item picker>
-            <Picker
-              mode="dropdown"
-              situacao={situacao}
-              onValueChange={(itemValue, itemIndex) => setSituacao(itemValue)}>
-              <Picker.Item label="Ativo" value="ativo" />
-              <Picker.Item label="Inativo" value="inativo" />
-            </Picker>
+          <Item stackedLabel>
+            <Label>CPF/CNPJ</Label>
+            <Input keyboardType='numeric' value={cpfcnpj} onChangeText={(text) => setCpfcnpj(text)} />
           </Item>
+          <Content padder/>
+          
+          <Item stackedLabel>
+            <Label>Dia Vencimento</Label>
+            <Input keyboardType='numeric' value={diaVencimento} onChangeText={(text) => setDiaVencimento(text)} />
+          </Item>
+          <Content padder/>
           <Item>
-            <Label>Data de Ativação</Label>
+          <Label>Situação</Label>
+            <CheckBox value={situacao} onValueChange={setSituacao} />
+            <Text>{situacao ? 'Ativo' : 'Inativo'}</Text>
+          </Item>
+          <Content padder/>
+          <Item>
+            <Label>Data de Pagamento</Label>
             <DatePicker
-              date={dataLicenca}
+              date={dataPagamento}
               format="DD-MM-YYYY"
-              onDateChange={(date) => setDataLicenca(date)}
+              onDateChange={(date) => setDataPagamento(date)}
               customStyles={{
                 dateIcon: {
                   position: 'absolute',
@@ -77,19 +147,35 @@ export default function AddItem() {
               }}
             />
           </Item>
-        </Form>
-        <View
-          style={{
-            flexDirection: 'row',
-            flex: 1,
-            justifyContent: 'space-between',
-            padding: 15,
-          }}>
-          <Button iconRight onPress={() => handleSubmit()}>
-            <Icon name="arrow-forward" />
-            <Text>Adicionar</Text>
+          <Content padder/>
+          <Item>
+            <Label>Data da Última Conex.</Label>
+            <DatePicker
+              date={dataConexao}
+              format="DD-MM-YYYY"
+              onDateChange={(date) => setDataConexao(date)}
+              customStyles={{
+                dateIcon: {
+                  position: 'absolute',
+                  left: 0,
+                  top: 4,
+                  marginLeft: 0,
+                },
+                dateInput: {
+                  marginLeft: 36,
+                },
+              }}
+            />
+          </Item>
+          <Content padder/>
+          <Button block info onPress={() => handleSubmit()}>
+            <Ionicons name="md-checkmark-circle" size={32} color="white" />
+            <Text>{key ? "Atualizar" : "Adicionar"}</Text>
           </Button>
-        </View>
+        </Form>
+        
+          </CardItem>
+          </Card>
       </Content>
     </Container>
   );

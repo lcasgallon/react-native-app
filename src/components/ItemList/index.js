@@ -1,21 +1,31 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
-import { ListItem, Text } from 'native-base';
+import { View, TouchableHighlight, ListItem, Text, Card, CardItem } from 'react-native';
 
 export default function ItemComponent({ items, navigation }) {
   return (
     <View>
-      {items.map((item, index) => {
+      {items.map((item) => {
         return (
-          <ListItem>
-            <TouchableHighlight onPress={() => navigation.navigate('AddItem')}>
-              <View key={index}>
+          <Card>
+            <CardItem header bordered>
+              <Text>{item.fantasia}</Text>
+            </CardItem>
+            <ListItem>
+            <CardItem bordered>
+              <TouchableHighlight
+                onPress={() => navigation.navigate('AddItem', { item })}>
+                <View key={item.key}>
                 <Text>
-                  {item.name} ({item.dataLicenca}) | {item.situacao}
-                </Text>
-              </View>
-            </TouchableHighlight>
-          </ListItem>
+                    CPF/CNPJ: {item.cpfcnpj}
+                  </Text>
+                  <Text>
+                    {item.situacao ? 'Ativo' : 'Inativo'}
+                  </Text>
+                </View>
+              </TouchableHighlight>
+              </CardItem>
+            </ListItem>
+          </Card>
         );
       })}
     </View>

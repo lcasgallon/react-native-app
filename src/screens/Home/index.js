@@ -1,33 +1,37 @@
 import React from 'react';
 import {
-  Container,
-  Header,
-  Content,
-  Button,
-  Text,
-  Footer,
-  FooterTab,
-} from 'native-base';
+  Container
+} from 'react-native';
 
 export default function Home({ navigation }) {
+  const { item } = new Object();
+
   return (
     <Container>
-      <Header />
+      {/* <Header />
       <Content>
-        <Button success full onPress={() => navigation.navigate('AddItem')}>
-          <Text>Adicionar Licença</Text>
-        </Button>
-        <Button success full onPress={() => navigation.navigate('Lista')}>
-          <Text>Lista de licenças</Text>
-        </Button>
+        <Card>
+          <CardItem>
+            <Body>
+              <Button
+                full
+                onPress={() => navigation.navigate('AddItem', { item })}>
+                <Text>Adicionar Licença</Text>
+              </Button>
+            </Body>
+          </CardItem>
+        </Card>
+        <Card>
+          <CardItem>
+            <Body>
+              <Button full onPress={() => navigation.navigate('Lista')}>
+                <Text>Lista de licenças</Text>
+              </Button>
+            </Body>
+          </CardItem>
+        </Card>
       </Content>
-      <Footer>
-        <FooterTab>
-          <Button full>
-            <Text>Sistema de licenças</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+       */}
     </Container>
   );
 }
