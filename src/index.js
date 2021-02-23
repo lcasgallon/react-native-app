@@ -6,7 +6,7 @@ import { YellowBox } from 'react-native';
 class App extends React.Component {
   construct() {
     YellowBox.ignoreWarnings(['Setting a timer']);
-}
+  }
   render() {
     return <Routes />;
   }

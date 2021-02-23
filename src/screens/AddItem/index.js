@@ -1,19 +1,8 @@
 import React, { useState } from 'react';
-import { View, Alert, CheckBox, Button,
-  Header,
-  Container,
-  Text,
-  Label,
-  Form,
-  Input,
-  Item,
-  Content,
-  Card,
-  CardItem } from 'react-native';
+import { View, Alert, Button, Text, CheckBox } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import { Ionicons } from '@expo/vector-icons';
-import * as Font from 'expo-font';
-
+import { Input } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 
 import { db } from '../../config/firebase';
 import { useEffect } from 'react';
@@ -92,91 +81,97 @@ export default function AddItem({ navigation, route }) {
   }, []);
 
   return (
-    <Container>
-      <Header>
-        <Text>{key ? <Label>ID Firebase -{key ? key : ''}</Label> : null}</Text>
-        </Header>
-      <Content>
-      <Card>
-            <CardItem>
-        <Form>
-          <Item stackedLabel>
-            <Label>Fantasia</Label>
-            <Input
-              value={fantasia}
-              onChangeText={(text) => setFantasia(text)}
-            />
-            </Item>
-            <Item stackedLabel>
-            <Label>Razão Social</Label>
-            <Input value={razao} onChangeText={(text) => setRazao(text)} />
-          </Item>
-          <Item stackedLabel>
-            <Label>CPF/CNPJ</Label>
-            <Input keyboardType='numeric' value={cpfcnpj} onChangeText={(text) => setCpfcnpj(text)} />
-          </Item>
-          <Content padder/>
-          
-          <Item stackedLabel>
-            <Label>Dia Vencimento</Label>
-            <Input keyboardType='numeric' value={diaVencimento} onChangeText={(text) => setDiaVencimento(text)} />
-          </Item>
-          <Content padder/>
-          <Item>
-          <Label>Situação</Label>
-            <CheckBox value={situacao} onValueChange={setSituacao} />
-            <Text>{situacao ? 'Ativo' : 'Inativo'}</Text>
-          </Item>
-          <Content padder/>
-          <Item>
-            <Label>Data de Pagamento</Label>
-            <DatePicker
-              date={dataPagamento}
-              format="DD-MM-YYYY"
-              onDateChange={(date) => setDataPagamento(date)}
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0,
-                },
-                dateInput: {
-                  marginLeft: 36,
-                },
-              }}
-            />
-          </Item>
-          <Content padder/>
-          <Item>
-            <Label>Data da Última Conex.</Label>
-            <DatePicker
-              date={dataConexao}
-              format="DD-MM-YYYY"
-              onDateChange={(date) => setDataConexao(date)}
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0,
-                },
-                dateInput: {
-                  marginLeft: 36,
-                },
-              }}
-            />
-          </Item>
-          <Content padder/>
-          <Button block info onPress={() => handleSubmit()}>
-            <Ionicons name="md-checkmark-circle" size={32} color="white" />
-            <Text>{key ? "Atualizar" : "Adicionar"}</Text>
-          </Button>
-        </Form>
-        
-          </CardItem>
-          </Card>
-      </Content>
-    </Container>
+    <View>
+      <Header
+        centerComponent={{
+          text: 'Sistema de Licenças',
+          style: { color: '#fff' },
+        }}
+      />
+      <View>
+        <Input
+          label="Fantasia"
+          value={fantasia}
+          onChangeText={(text) => setFantasia(text)}
+        />
+      </View>
+      <View>
+        <Input
+          label="Razão Social"
+          value={razao}
+          onChangeText={(text) => setRazao(text)}
+        />
+      </View>
+      <View>
+        <Input
+          label="CPF/CNPJ"
+          keyboardType="numeric"
+          value={cpfcnpj}
+          onChangeText={(text) => setCpfcnpj(text)}
+        />
+      </View>
+      <View>
+        <Input
+          label="Dia Vencimento"
+          keyboardType="numeric"
+          value={diaVencimento}
+          onChangeText={(text) => setDiaVencimento(text)}
+        />
+      </View>
+      <View>
+        <Text>Situação</Text>
+        <CheckBox value={situacao} onValueChange={setSituacao}></CheckBox>
+        {/* <CheckBox
+          checked={situacao}
+          iconType="material"
+          checkedIcon="clear"
+          uncheckedIcon="add"
+          checkedColor="red"
+          onValueChange={setSituacao}
+        /> */}
+        <Text>{situacao ? 'Ativo' : 'Inativo'}</Text>
+      </View>
+      <View>
+        <Text>Data de Pagamento</Text>
+        <DatePicker
+          date={dataPagamento}
+          format="DD-MM-YYYY"
+          onDateChange={(date) => setDataPagamento(date)}
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0,
+            },
+            dateInput: {
+              marginLeft: 36,
+            },
+          }}
+        />
+      </View>
+      <View>
+        <Text>Data da Última Conex.</Text>
+        <DatePicker
+          date={dataConexao}
+          format="DD-MM-YYYY"
+          onDateChange={(date) => setDataConexao(date)}
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0,
+            },
+            dateInput: {
+              marginLeft: 36,
+            },
+          }}
+        />
+      </View>
+      <Button
+        title={key ? 'Atualizar' : 'Adicionar'}
+        onPress={() => handleSubmit()}></Button>
+    </View>
   );
 }

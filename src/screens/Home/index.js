@@ -1,37 +1,29 @@
 import React from 'react';
-import {
-  Container
-} from 'react-native';
+import { View, Button, Text } from 'react-native';
+import { Header, Card } from 'react-native-elements';
 
 export default function Home({ navigation }) {
   const { item } = new Object();
 
   return (
-    <Container>
-      {/* <Header />
-      <Content>
-        <Card>
-          <CardItem>
-            <Body>
-              <Button
-                full
-                onPress={() => navigation.navigate('AddItem', { item })}>
-                <Text>Adicionar Licença</Text>
-              </Button>
-            </Body>
-          </CardItem>
-        </Card>
-        <Card>
-          <CardItem>
-            <Body>
-              <Button full onPress={() => navigation.navigate('Lista')}>
-                <Text>Lista de licenças</Text>
-              </Button>
-            </Body>
-          </CardItem>
-        </Card>
-      </Content>
-       */}
-    </Container>
+    <View>
+      <Header
+        centerComponent={{
+          text: 'Sistema de Licenças',
+          style: { color: '#fff' },
+        }}
+      />
+      <Card>
+        <Button
+          onPress={() => navigation.navigate('AddItem', { item })}
+          title="Adicionar Licença"
+        />
+        <Card.Divider />
+        <Button
+          onPress={() => navigation.navigate('Lista')}
+          title="Lista de licenças"
+        />
+      </Card>
+    </View>
   );
 }

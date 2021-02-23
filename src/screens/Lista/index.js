@@ -1,45 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
-  Container,
-  Header,
-  Content,
-  List,
-  Item,
-  Button,
-  Icon,
-  Input,
-} from 'react-native';
+import { View, Text, FlatList } from 'react-native';
+import { Header, SafeAreaView, SearchBar } from 'react-native-elements';
 
 import ItemList from '../../components/ItemList';
 
 import { db } from '../../config/firebase';
 
-import { Feather } from '@expo/vector-icons';
-
-// let itemsRef = db.ref('/items');
-
 export default function Lista({ navigation }) {
   const [items, setItems] = useState([]);
-  //const [keys, setKeys] = useState([]);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
-    // db.ref('/items').on('value', querySnapShot => {
-    //   let data = querySnapShot.val() ? querySnapShot.val() : {};
-    //   let items = {...data};
-    //   console.log(data);
-    //   console.log(Object.values(data));
-    //   console.log(Object.keys(items));
-    //   data.forEach(function(d)){
-    //     console
-    //   }
-    //   setItems(items);
-    // });
-
     db.ref('/items').on('value', (snapshot) => {
       var li = [];
       snapshot.forEach((child) => {
@@ -54,40 +25,40 @@ export default function Lista({ navigation }) {
           diaVencimento: child.val().diaVencimento,
         });
       });
+      console.log(li);
       setItems(li);
+      console.log(items.length);
     });
   }, []);
 
   return (
-    <Container>
-      <Header searchBar rounded>
-        <Item>
-          <Feather name="search" size={24} color="black" />
-          <Input placeholder="Procurar" />
-        </Item>
-        <Button>
-          <Text>Procurar</Text>
-        </Button>
-      </Header>
-      <Content>
-        {items.length > 0 ? (
-          <SafeAreaView>
-            <FlatList
-              data={items}
-              keyExtractor={(item) => item.key}
-              renderItem={({ item }) => {
-                return (
-                  <View>
-                    <ItemList items={items} navigation={navigation} />
-                  </View>
-                );
-              }}
-            />
-          </SafeAreaView>
-        ) : (
-          <Text>Sem itens</Text>
-        )}
-      </Content>
-    </Container>
+    <View>
+      <Header
+        centerComponent={{
+          text: 'Sistema de Licenças',
+          style: { color: '#fff' },
+        }}
+      />
+      <SearchBar
+        placeholder="Pesquisar..."
+        onChangeText={(text) => setSearch(text)}
+        value={search}
+      />
+      {items.length > 0 ? (
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item.key}
+          renderItem={({ item }) => {
+            return (
+              <View>
+                <ItemList items={items} navigation={navigation} />
+              </View>
+            );
+          }}
+        />
+      ) : (
+        <Text>Sem itens</Text>
+      )}
+    </View>
   );
 }
