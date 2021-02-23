@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, Alert, Button, Text, CheckBox } from 'react-native';
+import { View, Alert, Button, Text, CheckBox, StyleSheet } from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import { Input } from 'react-native-elements';
-import { Header } from 'react-native-elements';
+import { Input, Header, Card } from 'react-native-elements';
 
 import { db } from '../../config/firebase';
 import { useEffect } from 'react';
@@ -20,7 +19,6 @@ let addItem = (item) => {
 };
 
 let updateItem = (item) => {
-  console.log(item);
   db.ref('/items/' + item.key).update({
     fantasia: item.fantasia,
     cpfcnpj: item.cpfcnpj,
@@ -37,8 +35,8 @@ export default function AddItem({ navigation, route }) {
   const [cpfcnpj, setCpfcnpj] = useState('');
   const [razao, setRazao] = useState('');
   const [diaVencimento, setDiaVencimento] = useState('');
-  const [dataPagamento, setDataPagamento] = useState('');
-  const [dataConexao, setDataConexao] = useState('');
+  const [dataPagamento, setDataPagamento] = useState(new Date());
+  const [dataConexao, setDataConexao] = useState(new Date());
   const [situacao, setSituacao] = useState(true);
   const [key, setKey] = useState('');
 
@@ -57,9 +55,11 @@ export default function AddItem({ navigation, route }) {
       if (item.key) {
         updateItem(item);
         Alert.alert('Registro atualizado com sucesso');
+        navigation.navigate('Lista');
       } else {
         addItem(item);
         Alert.alert('Registro salvo com sucesso');
+        navigation.navigate('Lista');
       }
     } else {
       Alert.alert('Por favor preencha todos os campos');
@@ -84,44 +84,87 @@ export default function AddItem({ navigation, route }) {
     <View>
       <Header
         centerComponent={{
-          text: 'Sistema de Licenças',
+          text: 'Cadastro de Licenças',
           style: { color: '#fff' },
         }}
       />
-      <View>
-        <Input
-          label="Fantasia"
-          value={fantasia}
-          onChangeText={(text) => setFantasia(text)}
-        />
-      </View>
-      <View>
-        <Input
-          label="Razão Social"
-          value={razao}
-          onChangeText={(text) => setRazao(text)}
-        />
-      </View>
-      <View>
-        <Input
-          label="CPF/CNPJ"
-          keyboardType="numeric"
-          value={cpfcnpj}
-          onChangeText={(text) => setCpfcnpj(text)}
-        />
-      </View>
-      <View>
-        <Input
-          label="Dia Vencimento"
-          keyboardType="numeric"
-          value={diaVencimento}
-          onChangeText={(text) => setDiaVencimento(text)}
-        />
-      </View>
-      <View>
-        <Text>Situação</Text>
-        <CheckBox value={situacao} onValueChange={setSituacao}></CheckBox>
-        {/* <CheckBox
+      <Card>
+        <View>
+          <Input
+            label="Razão Social"
+            value={razao}
+            onChangeText={(text) => setRazao(text)}
+          />
+        </View>
+        <View>
+          <Input
+            label="Fantasia"
+            value={fantasia}
+            onChangeText={(text) => setFantasia(text)}
+          />
+        </View>
+        <View>
+          <Input
+            label="CPF/CNPJ"
+            keyboardType="numeric"
+            value={cpfcnpj}
+            onChangeText={(text) => setCpfcnpj(text)}
+          />
+        </View>
+        <View>
+          <Input
+            label="Dia Vencimento"
+            keyboardType="numeric"
+            value={diaVencimento}
+            onChangeText={(text) => setDiaVencimento(text)}
+          />
+        </View>
+
+        <View>
+          <Text style={styles.titleText}>Data de Pagamento</Text>
+          <DatePicker
+            date={dataPagamento}
+            format="DD-MM-YYYY"
+            onDateChange={(date) => setDataPagamento(date)}
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                marginLeft: 0,
+              },
+              dateInput: {
+                marginLeft: 36,
+              },
+            }}
+          />
+        </View>
+        <Card.Divider />
+        <View>
+          <Text style={styles.titleText}>Data da Última Conex.</Text>
+          <DatePicker
+            disabled
+            date={dataConexao}
+            format="DD-MM-YYYY"
+            onDateChange={(date) => setDataConexao(date)}
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                left: 0,
+                top: 4,
+                marginLeft: 0,
+              },
+              dateInput: {
+                marginLeft: 36,
+              },
+            }}
+          />
+        </View>
+        <Card.Divider />
+        <View>
+          <Text style={styles.titleText}>Situação</Text>
+          <CheckBox value={situacao} onValueChange={setSituacao}></CheckBox>
+          {/* <CheckBox
           checked={situacao}
           iconType="material"
           checkedIcon="clear"
@@ -129,49 +172,20 @@ export default function AddItem({ navigation, route }) {
           checkedColor="red"
           onValueChange={setSituacao}
         /> */}
-        <Text>{situacao ? 'Ativo' : 'Inativo'}</Text>
-      </View>
-      <View>
-        <Text>Data de Pagamento</Text>
-        <DatePicker
-          date={dataPagamento}
-          format="DD-MM-YYYY"
-          onDateChange={(date) => setDataPagamento(date)}
-          customStyles={{
-            dateIcon: {
-              position: 'absolute',
-              left: 0,
-              top: 4,
-              marginLeft: 0,
-            },
-            dateInput: {
-              marginLeft: 36,
-            },
-          }}
-        />
-      </View>
-      <View>
-        <Text>Data da Última Conex.</Text>
-        <DatePicker
-          date={dataConexao}
-          format="DD-MM-YYYY"
-          onDateChange={(date) => setDataConexao(date)}
-          customStyles={{
-            dateIcon: {
-              position: 'absolute',
-              left: 0,
-              top: 4,
-              marginLeft: 0,
-            },
-            dateInput: {
-              marginLeft: 36,
-            },
-          }}
-        />
-      </View>
-      <Button
-        title={key ? 'Atualizar' : 'Adicionar'}
-        onPress={() => handleSubmit()}></Button>
+          <Text style={styles.titleText}>{situacao ? 'Ativo' : 'Inativo'}</Text>
+        </View>
+        <Card.Divider />
+        <Button
+          title={key ? 'Atualizar' : 'Adicionar'}
+          onPress={() => handleSubmit()}></Button>
+      </Card>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "gray"
+  }
+});

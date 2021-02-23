@@ -1,3 +1,6 @@
 {
-  "name": "rnFirebaseCrud"
+  "name": "licencasApp",
+  "android": {
+    "package": "licencas.android"
+  }
 }

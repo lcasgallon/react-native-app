@@ -20,6 +20,6 @@ function Routes() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+} 
 
 export default Routes;

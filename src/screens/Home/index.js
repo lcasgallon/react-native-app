@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Button } from 'react-native';
 import { Header, Card } from 'react-native-elements';
 
 export default function Home({ navigation }) {
